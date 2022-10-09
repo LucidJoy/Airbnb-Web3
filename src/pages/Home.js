@@ -1,6 +1,6 @@
 import React, { Children, useState } from "react";
 import "./Home.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import images from "../images";
 import {
@@ -17,6 +17,8 @@ const Home = () => {
   const [checkOut, setCheckOut] = useState(new Date());
   const [destination, setDestination] = useState("New York");
   const [guests, setGuests] = useState(2);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -110,7 +112,7 @@ const Home = () => {
         </div>
         <Button
           text='Explore a Location'
-          onClick={() => console.log(checkOut)}
+          onClick={() => navigate("/rentals")} //TODO
         />
       </div>
     </>
