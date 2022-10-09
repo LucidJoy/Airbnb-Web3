@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Rentals.css";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router";
 
 import images from "../images";
 import { Button, ConnectButton, Icon } from "web3uikit";
+import RentalsMap from "../components/RentalsMap";
 
 const Rentals = () => {
-  const { state } = useLocation();
+  const [highlight, setHighlight] = useState();
 
+  const { state } = useLocation();
   const rentalsList = [
     {
       attributes: {
@@ -24,6 +26,11 @@ const Rentals = () => {
       },
     },
   ];
+
+  let coords = [];
+  rentalsList.forEach((e) => {
+    coords.push({ lat: e.attributes.lat, lng: e.attributes.long });
+  });
 
   return (
     <>
@@ -62,38 +69,41 @@ const Rentals = () => {
       <div className='rentalsContent'>
         <div className='rentalsContentL'>
           Stays available for your destination
-          {rentalsList?.map((e) => {
-            return (
-              <>
-                <hr className='line2' />
-                <div className='rentalDiv'>
-                  <img
-                    src={e.attributes.imgUrl}
-                    alt='pic'
-                    className='rentalImg'
-                  />
-                  <div className='rentalInfo'>
-                    <div className='rentalTitle'>{e.attributes.name}</div>
-                    <div className='rentalDesc'>
-                      {e.attributes.unoDescription}
-                    </div>
-                    <div className='rentalDesc'>
-                      {e.attributes.dosDescription}
-                    </div>
-                    <div className='bottomButton'>
-                      <Button text='Stay here' />
-                      <div className='price'>
-                        <Icon fill='#808080' size={10} svg='matic' />
-                        {e.attributes.pricePerDay} / Day
+          {rentalsList &&
+            rentalsList?.map((e, i) => {
+              return (
+                <>
+                  <hr className='line2' />
+                  <div className={highlight == i ? "rentalDivH" : "rentalDiv"}>
+                    <img
+                      src={e.attributes.imgUrl}
+                      alt='pic'
+                      className='rentalImg'
+                    />
+                    <div className='rentalInfo'>
+                      <div className='rentalTitle'>{e.attributes.name}</div>
+                      <div className='rentalDesc'>
+                        {e.attributes.unoDescription}
+                      </div>
+                      <div className='rentalDesc'>
+                        {e.attributes.dosDescription}
+                      </div>
+                      <div className='bottomButton'>
+                        <Button text='Stay here' />
+                        <div className='price'>
+                          <Icon fill='#808080' size={10} svg='matic' />
+                          {e.attributes.pricePerDay} / Day
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </>
-            );
-          })}
+                </>
+              );
+            })}
         </div>
-        <div className='rentalsContentR'></div>
+        <div className='rentalsContentR'>
+          <RentalsMap locations={coords} setHighlight={setHighlight} />
+        </div>
       </div>
     </>
   );
